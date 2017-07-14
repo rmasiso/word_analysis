@@ -4,6 +4,7 @@ import re
 import warnings
 
 from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.manifold import TSNE
@@ -27,25 +28,21 @@ def parse_input(filename):
     with open(filename) as input_file:
         stop_words = stopwords.words('english')
         sentences = []
-
-        symbol_pattern = re.compile(r'[-\'_,;: (){}<>\[\]\t\.]')
         alpha_pattern = re.compile(r'[^a-zA-Z]')
 
         for line in input_file:
-            if line not in ['\n', '\r\n']:
-                word_list = []
-                words = symbol_pattern.split(line)
+            word_list = []
+            words = word_tokenize(line)
+            for word in words:
+                clean_word = alpha_pattern.sub('', word)
+                if clean_word:
+                    lower_word = clean_word.lower()
+                    if len(lower_word) > 1 and lower_word not in stop_words:
+                        stemmed = global_stemmer.stem(lower_word)
+                        word_list.append(stemmed)
 
-                for word in words:
-                    clean_word = alpha_pattern.sub('', word)
-                    if clean_word:
-                        lower_word = clean_word.lower()
-                        if len(lower_word) > 1 and lower_word not in stop_words:
-                            stemmed = global_stemmer.stem(lower_word)
-                            word_list.append(stemmed)
-
-                if len(word_list) > 0:
-                    sentences.append(word_list)
+            if len(word_list) > 0:
+                sentences.append(word_list)
 
     return sentences
 
