@@ -3,7 +3,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 from gensim.parsing import PorterStemmer
-#import re
+import re
 import string
 
 class Preprocessor(object):
@@ -28,7 +28,9 @@ class Preprocessor(object):
         """Parses input text and returns phrases from text"""
         phrases = []
         #alpha_pattern = re.compile(r'[^a-zA-Z]')
-        
+        extra_chars = re.compile(u'[-\"\'\u201C\u201D\u2018\u2019\u2013/]|(\.\.\.)')
+        text = re.sub(extra_chars, ' ', text)
+
         if separate_lines:
             lines = text.splitlines()
             sentences = []
