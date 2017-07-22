@@ -28,7 +28,7 @@ class Preprocessor(object):
         """Parses input text and returns phrases from text"""
         phrases = []
         #alpha_pattern = re.compile(r'[^a-zA-Z]')
-        extra_chars = re.compile(u'[-\"\'\u201C\u201D\u2018\u2019\u2013/]|(\.\.\.)')
+        extra_chars = re.compile(u'[-\"\'\u201C\u201D\u2018\u2019\u2013/]|(\.\.\.)|[0-9]')
         text = re.sub(extra_chars, ' ', text)
 
         if separate_lines:
