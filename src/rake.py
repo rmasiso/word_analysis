@@ -1,17 +1,22 @@
-
+"""Rake analysis class. Keyword extraction from text input."""
 
 class Rake(object):
+    """Rake class"""
+    def __init__(self):
+        self._phrase_list = []
 
     def run(self, phrase_list, number_to_return):
-        word_scores = self._calculate_word_scores(phrase_list)
-        keyword_candidates = self._generate_candidate_keyword_scores(phrase_list, word_scores)
-        sorted_keywords = sorted(keyword_candidates, key=keyword_candidates.get, reverse=True)
+        """Run the Rake analysis"""
+        self._phrase_list = phrase_list
+        word_scores = self._calculate_word_scores()
+        keywords = self._generate_keyword_scores(word_scores)
+        sorted_keywords = sorted(keywords, key=keywords.get, reverse=True)
         return sorted_keywords[:number_to_return]
 
-    def _calculate_word_scores(self, phrase_list):
+    def _calculate_word_scores(self):
         word_frequency = {}
         word_degree = {}
-        for phrase in phrase_list:
+        for phrase in self._phrase_list:
             word_list_length = len(phrase)
             word_list_degree = word_list_length - 1
 
@@ -30,14 +35,13 @@ class Rake(object):
             word_score[item] = word_degree[item] / (word_frequency[item] * 1.0)
         return word_score
 
-    def _generate_candidate_keyword_scores(self, phrase_list, word_score):
-        keyword_candidates = {}
-        for phrase in phrase_list:
+    def _generate_keyword_scores(self, word_score):
+        keywords = {}
+        for phrase in self._phrase_list:
             phrase_string = " ".join(phrase)
-            keyword_candidates.setdefault(phrase_string, 0)
+            keywords.setdefault(phrase_string, 0)
             candidate_score = 0
             for word in phrase:
                 candidate_score += word_score[word]
-            keyword_candidates[phrase_string] = candidate_score
-        return keyword_candidates
-
+            keywords[phrase_string] = candidate_score
+        return keywords
