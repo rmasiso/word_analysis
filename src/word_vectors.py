@@ -44,7 +44,7 @@ class WordVectors(object):
             vectors.append(self._model[word])
 
         vectors = np.asarray(vectors)
-        tsne = TSNE(n_components=2, init='pca', random_state=0)
+        tsne = TSNE(perplexity=30, n_components=2, init='pca', n_iter=5000)
         vectors = tsne.fit_transform(vectors)
 
         return vectors
